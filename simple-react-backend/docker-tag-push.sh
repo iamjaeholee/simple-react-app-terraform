@@ -1,5 +1,5 @@
 #!/bin/bash
-IMAGE_NAME=nongmans-temperary-backend
+IMAGE_NAME=squid-temperary-backend
 IMAGE_VERSION=$1
 
 # login ECR
