@@ -1,21 +1,30 @@
-FROM node:10.12.0-alpine
+FROM node:alpine
 
-RUN mkdir -p /home/back
-WORKDIR /home/back
+# Set working directory
+WORKDIR /usr/app
 
-COPY package.json ./
-RUN npm i
+# Install PM2 globally
+RUN npm install --global pm2
 
-COPY app.js ./
-COPY bin ./bin
-COPY routes ./routes
+# Copy "package.json" and "package-lock.json" before other files
+# Utilise Docker cache to save re-installing dependencies if unchanged
+COPY ./package*.json ./
 
-RUN mkdir /root/.aws
-COPY credentials /root/.aws/credentials
+# Install dependencies
+RUN npm install --production
 
-RUN cat /root/.aws/credentials
+# Copy all files
+COPY ./ ./
 
+# Build app
+RUN npm run build
+
+# Expose the listening port
 EXPOSE 6449
-ENV PORT 6449
 
-ENTRYPOINT ["npm", "run-script", "start"]
+# Run container as non-root (unprivileged) user
+# The "node" user is provided in the Node.js Alpine base image
+USER node
+
+# Launch app with PM2
+CMD [ "pm2-runtime", "start", "npm", "--", "start" ]
