@@ -1,0 +1,38 @@
+{
+  "name": "simple-next-front",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "analyze": "ANALYZE=true next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@editorjs/delimiter": "^1.2.0",
+    "@editorjs/editorjs": "^2.22.2",
+    "@editorjs/embed": "^2.4.6",
+    "@editorjs/header": "^2.6.1",
+    "@editorjs/image": "^2.6.1",
+    "@editorjs/list": "^1.6.2",
+    "@editorjs/marker": "^1.2.2",
+    "@editorjs/quote": "^2.4.0",
+    "@editorjs/table": "^2.0.1",
+    "@next/bundle-analyzer": "^11.1.2",
+    "antd": "^4.16.13",
+    "axios": "^0.22.0",
+    "babel-plugin-styled-components": "^1.13.2",
+    "editorjs-blocks-react-renderer": "^1.1.1",
+    "html-react-parser": "^1.4.0",
+    "next": "11.1.2",
+    "react": "17.0.2",
+    "react-dom": "17.0.2",
+    "styled-components": "^5.3.1",
+    "swr": "^1.0.1"
+  },
+  "devDependencies": {
+    "eslint": "8.0.0",
+    "eslint-config-next": "11.1.2"
+  }
+}
