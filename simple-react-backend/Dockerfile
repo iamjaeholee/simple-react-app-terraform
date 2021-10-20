@@ -16,15 +16,15 @@ RUN npm install --production
 # Copy all files
 COPY ./ ./
 
-# Build app
-RUN npm run build
-
 # Expose the listening port
 EXPOSE 6449
 
 # Run container as non-root (unprivileged) user
 # The "node" user is provided in the Node.js Alpine base image
 USER node
+
+# envs
+ENV NODE_ENV production
 
 # Launch app with PM2
 CMD [ "pm2-runtime", "start", "npm", "--", "start" ]

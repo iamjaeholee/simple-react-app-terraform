@@ -1,0 +1,16 @@
+[
+  {
+    "name": "squid-frontend",
+    "image": "457725217880.dkr.ecr.ap-northeast-2.amazonaws.com/squid-frontend",
+    "cpu": 256,
+    "memory": 1024,
+    "portMappings": [
+      {
+        "hostPort": 3000,
+        "containerPort": 3000,
+        "protocol": "tcp"
+      }
+    ],
+    "essential": true
+  }
+]

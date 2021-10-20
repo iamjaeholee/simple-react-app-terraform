@@ -1,5 +1,5 @@
 #!/bin/bash
-IMAGE_NAME=squid-backend
+IMAGE_NAME=squid-frontend
 IMAGE_VERSION=$1
 
 # login ECR
