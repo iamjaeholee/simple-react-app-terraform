@@ -100,8 +100,12 @@ export async function getServerSideProps() {
   const API_ENDPOINT =
     process.env.REACT_APP_API_ENDPOINT || "http://localhost:6449";
   // Fetch data from external API
-  const { data } = await axios.get(`${API_ENDPOINT}/editorjs`);
-
-  // Pass data to the page via props
-  return { props: { data } };
+  try {
+    const { data } = await axios.get(`${API_ENDPOINT}/editorjs`);
+    // Pass data to the page via props
+    return { props: { data } };
+  } catch (e) {
+    // Pass data to the page via props
+    return { props: { data: [] } };
+  }
 }

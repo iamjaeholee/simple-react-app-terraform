@@ -5,7 +5,6 @@ const multerS3 = require("multer-s3");
 const aws = require("aws-sdk");
 const S3 = new aws.S3({});
 
-console.log(aws.config.credentials);
 S3.listBuckets((err, data) => {
   console.log(data);
   if (err) console.log(err.message);
@@ -113,6 +112,14 @@ router.delete("/delete", async function (req, res, next) {
   } catch (e) {
     console.log(e);
   }
+});
+
+/**
+ *
+ * health check
+ */
+router.get("/healthcheck", function (req, res, next) {
+  res.status(200).end();
 });
 
 module.exports = router;

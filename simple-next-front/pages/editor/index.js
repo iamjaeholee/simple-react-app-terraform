@@ -64,7 +64,10 @@ const Div = styled.div`
 `;
 
 export default function Editor() {
-  const API_ENDPOINT = useMemo(() => "http://localhost:6449", []);
+  const API_ENDPOINT = useMemo(
+    () => process.env.REACT_APP_API_ENDPOINT || "http://localhost:6449",
+    []
+  );
   const [editor, setEditor] = useState(null);
   let editorJs;
 
