@@ -1,10 +1,35 @@
-resource "aws_ecs_task_definition" "squid" {
+resource "aws_ecs_task_definition" "squid_frontend" {
   depends_on = [
     data.aws_iam_role.ecsTaskExecutionRole,
-    aws_ecs_cluster.squid
+    aws_ecs_cluster.squid,
+    aws_ecs_service.squid_backend
   ]
 
-  container_definitions    = file("task-definitions/squid-frontend.json")
+  container_definitions = <<DEFINITION
+  [
+    {
+      "name": "squid-frontend",
+      "image": "565906264822.dkr.ecr.ap-northeast-2.amazonaws.com/squid-frontend:0.0.5",
+      "cpu": 256,
+      "memory": 1024,
+      "portMappings": [
+        {
+          "hostPort": 3000,
+          "containerPort": 3000,
+          "protocol": "tcp"
+        }
+      ],
+      "essential": true,
+      "environment": [
+        {
+          "name": "REACT_APP_API_ENDPOINT",
+          "value": "http://${aws_lb.squid_backend.dns_name}"
+        }
+      ]
+    }
+  ]
+  DEFINITION
+
   family                   = "squid"
   network_mode             = "awsvpc"
   memory                   = "2048"
@@ -15,15 +40,14 @@ resource "aws_ecs_task_definition" "squid" {
 
 resource "aws_ecs_service" "squid_frontend" {
   depends_on = [
-    aws_lb_listener.squid,
-    aws_ecs_cluster.squid,
+    aws_lb_listener.squid_frontend,
     aws_ecs_cluster.squid,
     aws_ecs_service.squid_backend
   ]
 
-  name            = "squid-service"
+  name            = "squid-service-frontend"
   cluster         = aws_ecs_cluster.squid.id
-  task_definition = aws_ecs_task_definition.squid.arn
+  task_definition = aws_ecs_task_definition.squid_frontend.arn
   desired_count   = 1
   launch_type     = "FARGATE"
 
@@ -41,14 +65,14 @@ resource "aws_ecs_service" "squid_frontend" {
   }
 
   load_balancer {
-    target_group_arn = aws_lb_target_group.squid.arn
+    target_group_arn = aws_lb_target_group.squid_frontend.arn
     container_name   = "squid-frontend"
     container_port   = 3000
   }
 }
 
-resource "aws_lb" "squid" {
-  name               = "squid-lb"
+resource "aws_lb" "squid_frontend" {
+  name               = "squid-lb-frontend"
   internal           = false
   load_balancer_type = "application"
 
@@ -68,25 +92,25 @@ resource "aws_lb" "squid" {
   }
 }
 
-resource "aws_lb_target_group" "squid" {
+resource "aws_lb_target_group" "squid_frontend" {
   depends_on = [
-    aws_lb.squid
+    aws_lb.squid_frontend
   ]
 
-  name        = "squid-target-group"
+  name        = "squid-frontend-target-group"
   target_type = "ip"
   port        = 3000
   protocol    = "HTTP"
   vpc_id      = aws_vpc.squid.id
 }
 
-resource "aws_lb_listener" "squid" {
-  load_balancer_arn = aws_lb.squid.arn
+resource "aws_lb_listener" "squid_frontend" {
+  load_balancer_arn = aws_lb.squid_frontend.arn
   port              = "80"
   protocol          = "HTTP"
 
   default_action {
     type             = "forward"
-    target_group_arn = aws_lb_target_group.squid.arn
+    target_group_arn = aws_lb_target_group.squid_frontend.arn
   }
 }

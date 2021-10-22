@@ -6,8 +6,9 @@ resource "aws_docdb_cluster_instance" "squid_instance" {
 }
 
 resource "aws_docdb_cluster" "squid" {
-  cluster_identifier = "docdb-squid"
-  availability_zones = ["ap-northeast-2a", "ap-northeast-2b"]
-  master_username    = "squid"
-  master_password    = "1234"
+  cluster_identifier  = "docdb-squid"
+  master_username     = "squid"
+  master_password     = "dhdlfskarnt"
+  skip_final_snapshot = true
 }
+
