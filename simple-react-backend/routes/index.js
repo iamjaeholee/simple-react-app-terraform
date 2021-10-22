@@ -37,7 +37,7 @@ const Data = mongoose.model("Data", {
 const upload = multer({
   storage: multerS3({
     s3: S3,
-    bucket: "squid-game",
+    bucket: process.env.BUCKET || "squid-game",
     acl: "public-read",
   }),
 });
