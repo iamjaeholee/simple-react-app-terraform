@@ -108,8 +108,8 @@ const Post = ({ data }) => {
           </Link>
 
           <HeaderH1>
-            <NeonRed>이러다가는 </NeonRed>
-            <NeonBlue>다죽어 ~</NeonBlue>
+            <NeonRed>나 너무 </NeonRed>
+            <NeonBlue>무서워 ㅜㅜ</NeonBlue>
           </HeaderH1>
         </Col>
       </Row>

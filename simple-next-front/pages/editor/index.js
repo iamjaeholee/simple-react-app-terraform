@@ -138,7 +138,6 @@ export default function Editor() {
     editorJs
       .save()
       .then((outputData) => {
-        alert(outputData);
         axios({
           method: "post",
           url: `${API_ENDPOINT}/editorjs`,

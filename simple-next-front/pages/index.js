@@ -63,7 +63,7 @@ export default function Home({ data }) {
 
   useEffect(() => {
     let cards = [];
-    data.forEach((element) => {
+    data?.forEach((element) => {
       cards.push(element);
     });
 
@@ -79,14 +79,14 @@ export default function Home({ data }) {
           </Link>
 
           <HeaderH1>
-            <NeonRed>이러다가는 </NeonRed>
-            <NeonBlue>다죽어 ~</NeonBlue>
+            <NeonRed>제발 </NeonRed>
+            <NeonBlue>그만해 ~!</NeonBlue>
           </HeaderH1>
         </Col>
       </Row>
       <Row gutter={16}>
         {cards.map((value) => (
-          <Col span={6}>
+          <Col xs={12} sm={8} md={8} lg={6} xl={4}>
             <Card key={value._id} identity={value._id} data={value.blocks} />
           </Col>
         ))}
@@ -103,7 +103,11 @@ export async function getServerSideProps() {
   try {
     const { data } = await axios.get(`${API_ENDPOINT}/editorjs`);
     // Pass data to the page via props
-    return { props: { data } };
+    return {
+      props: {
+        data,
+      },
+    };
   } catch (e) {
     // Pass data to the page via props
     return { props: { data: [] } };

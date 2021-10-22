@@ -82,13 +82,13 @@ router.post("/", function (req, res, next) {
 /**
  * EditorJS get Data
  */
-router.get("/", function (req, res, next) {
+router.get("/", async function (req, res, next) {
   Data.find({}, (err, data) => {
     if (err) {
       console.log(err);
-      res.send(err);
+      res.status(500).send(err);
     }
-    res.send(data);
+    res.status(200).send(data);
   });
 });
 
@@ -112,14 +112,6 @@ router.delete("/delete", async function (req, res, next) {
   } catch (e) {
     console.log(e);
   }
-});
-
-/**
- *
- * health check
- */
-router.get("/healthcheck", function (req, res, next) {
-  res.status(200).end();
 });
 
 module.exports = router;
