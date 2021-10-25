@@ -118,6 +118,22 @@ docker ps
 
 ![](https://i.imgur.com/kHQsMn6.png)
 
+### ENV셋업하기
+
+> 백엔드
+
+```
+TF_VAR_AWS_ACCESS_KEY_ID
+TF_VAR_AWS_SECRET_ACCESS_KEY
+```
+
+로컬 env의 AWS키를 백엔드 env로 셋업 for multerS3
+
+> 프론트 엔드
+> next production 빌드 할 때 process.env가 들어가기 때문에 동적으로 API주소를 넣어줄 수가 없습니다. 그래서 백엔드 로드밸런서가 올라간 후 도메인 네임을 수정해서 다시 빌드를 해주어야 합니다.
+
+더 좋은 방법이 있을 것 같은데 잘 모르겠네용
+
 ### 테라폼 수정하기
 
 이제 테라폼 코드에 ECR에 푸시한 도커 이미지 이름을 넣어줄 차례입니다.  
@@ -172,31 +188,6 @@ terraform apply --auto-approve
 ### Terraform ECS
 
 테라폼 ECS코드로 어플리케이션에 필요한 인프라를 프로비저닝 하고 실행 및 다운할 수 있는지
-
-### 서버사이드 렌더링
-
-next 서버사이드 렌더링 잘 동작하는지
-
-```javascript=
-// This gets called on every request
-export async function getServerSideProps() {
-  const API_ENDPOINT =
-    process.env.REACT_APP_API_ENDPOINT || "http://localhost:6449";
-  // Fetch data from external API
-  try {
-    const { data } = await axios.get(`${API_ENDPOINT}/editorjs`);
-    // Pass data to the page via props
-    return {
-      props: {
-        data,
-      },
-    };
-  } catch (e) {
-    // Pass data to the page via props
-    return { props: { data: [] } };
-  }
-}
-```
 
 ### multer S3
 
