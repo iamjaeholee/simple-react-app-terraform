@@ -58,7 +58,28 @@ const NeonBlue = styled.i`
   }
 `;
 
-const Post = ({ data }) => {
+const Post = () => {
+  const router = useRouter();
+  const { id } = router.query;
+  const [data, setData] = useState({});
+
+  useEffect(async () => {
+    const API_ENDPOINT =
+      process.env.REACT_APP_API_ENDPOINT || "http://localhost:6449";
+    // Fetch data from external API
+    try {
+      const { data } = await axios.get(`${API_ENDPOINT}/editorjs/one`, {
+        params: {
+          id,
+        },
+      });
+
+      setData(data);
+    } catch (e) {
+      console.error(e);
+    }
+  }, []);
+
   const [block, setBlock] = useState(null);
 
   useEffect(() => {
@@ -121,20 +142,3 @@ const Post = ({ data }) => {
 };
 
 export default Post;
-
-// This gets called on every request
-export async function getServerSideProps(context) {
-  const { id } = context.query;
-
-  const API_ENDPOINT =
-    process.env.REACT_APP_API_ENDPOINT || "http://localhost:6449";
-  // Fetch data from external API
-  const { data } = await axios.get(`${API_ENDPOINT}/editorjs/one`, {
-    params: {
-      id,
-    },
-  });
-
-  // Pass data to the page via props
-  return { props: { data } };
-}

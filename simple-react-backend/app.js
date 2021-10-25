@@ -10,7 +10,10 @@ var cors = require("cors");
 
 var app = express();
 
-app.use(cors());
+const corsOptions = {
+  origin: "*",
+};
+app.use(cors(corsOptions));
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

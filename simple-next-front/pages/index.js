@@ -58,8 +58,22 @@ const NeonBlue = styled.i`
   }
 `;
 
-export default function Home({ data }) {
+export default function Home() {
   const [cards, setCards] = useState([]);
+  const [data, setData] = useState([]);
+
+  useEffect(async () => {
+    const API_ENDPOINT =
+      process.env.REACT_APP_API_ENDPOINT || "http://localhost:6449";
+    // Fetch data from external API
+    try {
+      const { data } = await axios.get(`${API_ENDPOINT}/editorjs`);
+      // Pass data to the page via props
+      setData(data);
+    } catch (e) {
+      console.error(e);
+    }
+  }, []);
 
   useEffect(() => {
     let cards = [];
@@ -93,23 +107,4 @@ export default function Home({ data }) {
       </Row>
     </div>
   );
-}
-
-// This gets called on every request
-export async function getServerSideProps() {
-  const API_ENDPOINT =
-    process.env.REACT_APP_API_ENDPOINT || "http://localhost:6449";
-  // Fetch data from external API
-  try {
-    const { data } = await axios.get(`${API_ENDPOINT}/editorjs`);
-    // Pass data to the page via props
-    return {
-      props: {
-        data,
-      },
-    };
-  } catch (e) {
-    // Pass data to the page via props
-    return { props: { data: [] } };
-  }
 }
