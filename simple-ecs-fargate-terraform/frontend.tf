@@ -9,7 +9,7 @@ resource "aws_ecs_task_definition" "squid_frontend" {
   [
     {
       "name": "squid-frontend",
-      "image": "565906264822.dkr.ecr.ap-northeast-2.amazonaws.com/squid-frontend:0.0.5",
+      "image": "565906264822.dkr.ecr.ap-northeast-2.amazonaws.com/squid-frontend:0.0.12",
       "cpu": 256,
       "memory": 1024,
       "portMappings": [

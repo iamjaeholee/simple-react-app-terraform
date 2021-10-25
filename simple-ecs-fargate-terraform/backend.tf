@@ -11,7 +11,7 @@ resource "aws_ecs_task_definition" "squid_backend" {
   [
     {
       "name": "squid-backend",
-      "image": "565906264822.dkr.ecr.ap-northeast-2.amazonaws.com/squid-backend:0.0.5",
+      "image": "565906264822.dkr.ecr.ap-northeast-2.amazonaws.com/squid-backend:0.0.8",
       "cpu": 256,
       "memory": 1024,
       "portMappings": [
@@ -25,9 +25,25 @@ resource "aws_ecs_task_definition" "squid_backend" {
       "environment": [
         {
           "name": "MONGODB_PATH",
-          "value": "mongodb://squid:dhdlfskarnt@${aws_docdb_cluster.squid.endpoint}:27017"
+          "value": "mongodb://${aws_docdb_cluster.squid.master_username}:${aws_docdb_cluster.squid.master_password}@${aws_docdb_cluster.squid.endpoint}:${aws_docdb_cluster.squid.port}"
+        },
+        {
+          "name": "AWS_ACCESS_KEY_ID",
+          "value": "${var.AWS_ACCESS_KEY_ID}"
+        },
+        {
+          "name": "AWS_SECRET_ACCESS_KEY",
+          "value": "${var.AWS_SECRET_ACCESS_KEY}"
         }
-      ]
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "${aws_cloudwatch_log_group.squid_log.name}",
+          "awslogs-region": "ap-northeast-2",
+          "awslogs-stream-prefix": "streaming"
+        }
+      }
     }
   ]
   DEFINITION
@@ -38,6 +54,14 @@ resource "aws_ecs_task_definition" "squid_backend" {
   cpu                      = "512"
   requires_compatibilities = ["FARGATE"]
   execution_role_arn       = data.aws_iam_role.ecsTaskExecutionRole.arn
+}
+
+resource "aws_cloudwatch_log_group" "squid_log" {
+  name = "squid-log"
+
+  tags = {
+    Name = "squid-log"
+  }
 }
 
 resource "aws_ecs_service" "squid_backend" {
@@ -114,5 +138,15 @@ resource "aws_lb_listener" "squid_backend" {
   default_action {
     type             = "forward"
     target_group_arn = aws_lb_target_group.squid_backend.arn
+  }
+}
+
+resource "aws_s3_bucket" "squid_s3" {
+  bucket        = "squid-game"
+  acl           = "public-read"
+  force_destroy = true
+
+  tags = {
+    Name = "squid-game"
   }
 }
