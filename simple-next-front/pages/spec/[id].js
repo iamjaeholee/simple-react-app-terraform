@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 import axios from "axios";
 import Blocks from "editorjs-blocks-react-renderer";
 import { Row, Col } from "antd";
@@ -61,7 +62,7 @@ const NeonBlue = styled.i`
 const Post = () => {
   const router = useRouter();
   const { id } = router.query;
-  const [data, setData] = useState({});
+  const [data, setData] = useState(undefined);
 
   useEffect(async () => {
     const API_ENDPOINT =
@@ -83,41 +84,43 @@ const Post = () => {
   const [block, setBlock] = useState(null);
 
   useEffect(() => {
-    setBlock(
-      <Blocks
-        data={data}
-        config={{
-          code: {
-            className: "col editor-code",
-          },
-          tr: {
-            className: "image",
-          },
-          embed: {
-            className: "col editor-embed",
-          },
-          header: {
-            className: "col editor-header",
-          },
-          image: {
-            className: "col editor-image",
-          },
-          list: {
-            className: "col editor-list",
-          },
-          paragraph: {
-            className: "col editor-paragraph",
-          },
-          quote: {
-            className: "col editor-quote",
-          },
-          table: {
-            className:
-              "col editor-table table table-striped table-dark table-hover",
-          },
-        }}
-      />
-    );
+    data
+      ? setBlock(
+          <Blocks
+            data={data}
+            config={{
+              code: {
+                className: "col editor-code",
+              },
+              tr: {
+                className: "image",
+              },
+              embed: {
+                className: "col editor-embed",
+              },
+              header: {
+                className: "col editor-header",
+              },
+              image: {
+                className: "col editor-image",
+              },
+              list: {
+                className: "col editor-list",
+              },
+              paragraph: {
+                className: "col editor-paragraph",
+              },
+              quote: {
+                className: "col editor-quote",
+              },
+              table: {
+                className:
+                  "col editor-table table table-striped table-dark table-hover",
+              },
+            }}
+          />
+        )
+      : setBlock(null);
   }, [data]);
 
   return (

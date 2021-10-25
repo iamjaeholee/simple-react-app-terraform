@@ -20,7 +20,7 @@ const mongoose = require("mongoose");
 try {
   mongoose.connect(`${MONGODB_PATH}/squid`, {
     useNewUrlParser: true,
-    useUnifiedTopology: true,
+    // useUnifiedTopology: true,
   });
 } catch (e) {
   console.log(e);
